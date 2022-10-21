@@ -1,0 +1,15 @@
+#gameArea{
+    width: 200px;
+    height: 200px;
+    border: solid 2px;
+    padding: 0%;
+}
+#snake{
+    width: 20px;
+    height: 20px;
+    border: solid 2px;
+}
+
+#canvaArea{
+    border: solid 2px;
+}   
