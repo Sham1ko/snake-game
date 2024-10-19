@@ -9,7 +9,7 @@ export function hideMenu() {
 let scoreDisplay = document.getElementById("score");
 let gameOverScreen = document.getElementById("gameOverScreen");
 let finalScoreDisplay = document.getElementById("finalScore");
-let restartButton = document.getElementById("restartButton");
+let leaderboardModal = document.getElementById("leaderboardModal");
 
 // Обновление и отображение текущего счета
 export function updateScore(score) {
@@ -26,4 +26,14 @@ export function showGameOverScreen(finalScore) {
 export function resetUI() {
     gameOverScreen.style.display = 'none'; // Скрываем Game Over экран
     scoreDisplay.innerText = `Score: 0`; // Сбрасываем счет
+}
+
+// Показ модального окна с таблицей лидеров
+export function showLeaderboardModal() {
+    leaderboardModal.style.display = 'block'; // Показываем модалку
+}
+
+// Закрытие модального окна с таблицей лидеров
+export function closeLeaderboardModal() {
+    leaderboardModal.style.display = 'none'; // Скрываем модалку
 }

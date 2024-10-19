@@ -10,6 +10,8 @@
     <h1 style="color: white">Snake Game</h1>
     <div id="menu">
       <button id="startButton">Start Game</button>
+      <button id="leaderboardButton">Show Leaderboard</button>
+      <!-- Кнопка для показа таблицы лидеров -->
     </div>
 
     <!-- Счетчик очков -->
@@ -22,7 +24,35 @@
       <div class="overlay-content">
         <h2>Game Over</h2>
         <p id="finalScore"></p>
+
+        <!-- Вопрос о сохранении результата -->
+        <p>Do you want to save your result?</p>
+        <input type="text" id="playerName" placeholder="Enter your name" />
+        <button id="saveButton">Save Result</button>
+
         <button id="restartButton">Restart Game</button>
+      </div>
+    </div>
+
+    <!-- Модалка для таблицы лидеров -->
+    <div id="leaderboardModal" class="modal">
+      <div class="modal-content">
+        <h2>Leaderboard</h2>
+        <table id="leaderboardTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Score</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <!-- Здесь будут отображаться данные -->
+          </tbody>
+        </table>
+        <button id="closeLeaderboardButton">Close</button>
+        <!-- Кнопка для закрытия модалки -->
       </div>
     </div>
 
