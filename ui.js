@@ -1,18 +1,23 @@
-export function showMenu() {
-    document.getElementById('menu').style.display = 'block';
+export function showScore() {
+    const score = document.createElement('div');
+    score.id = "score"
+    score.innerHTML = `Score: 0`
+    const gameTitle = document.getElementById("gameTitle")
+    if (gameTitle.style.marginTop == "5vh") {
+        gameTitle.insertAdjacentElement('afterend', score)
+        setTimeout(() => {
+            score.style.opacity = "1";
+        }, 400);
+    }
 }
 
-export function hideMenu() {
-    document.getElementById('menu').style.display = 'none';
-}
-
-let scoreDisplay = document.getElementById("score");
 let gameOverScreen = document.getElementById("gameOverScreen");
 let finalScoreDisplay = document.getElementById("finalScore");
 let leaderboardModal = document.getElementById("leaderboardModal");
 
 // Обновление и отображение текущего счета
 export function updateScore(score) {
+    let scoreDisplay = document.getElementById("score");
     scoreDisplay.innerText = `Score: ${score}`;
 }
 
@@ -36,4 +41,19 @@ export function showLeaderboardModal() {
 // Закрытие модального окна с таблицей лидеров
 export function closeLeaderboardModal() {
     leaderboardModal.style.display = 'none'; // Скрываем модалку
+}
+
+
+export function showCanvas() {
+    const gameCanvas = document.createElement('canvas')
+    // <!-- <canvas id="gameCanvas" width="300" height="300"></canvas> -->
+    gameCanvas.id = "gameCanvas"
+    gameCanvas.width = 500
+    gameCanvas.height = 500
+
+    const score = document.getElementById("score")
+    score.insertAdjacentElement('afterend', gameCanvas)
+    setTimeout(() => {
+        gameCanvas.style.opacity = "1";
+    }, 400);
 }

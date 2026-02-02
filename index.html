@@ -7,35 +7,36 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1 style="color: white">Snake Game</h1>
+    <h1 style="color: #f6b17a" id="gameTitle">Snake Game</h1>
     <div id="menu">
-      <button id="startButton">Start Game</button>
-      <button id="leaderboardButton">Show Leaderboard</button>
-      <!-- Кнопка для показа таблицы лидеров -->
+      <button id="startButton" class="nes-btn">Start</button>
+      <button id="leaderboardButton" class="nes-btn">Leaderboard</button>
+      <button id="aboutButton" class="nes-btn">About</button>
     </div>
 
     <!-- Счетчик очков -->
-    <div id="score">Score: 0</div>
+    <!-- <div id="score">Score: 0</div> -->
 
-    <canvas id="gameCanvas" width="300" height="300"></canvas>
+    <!-- <canvas id="gameCanvas" width="300" height="300"></canvas> -->
 
     <!-- Всплывающее окно при окончании игры -->
-    <div id="gameOverScreen" class="overlay">
+    <!-- <div id="gameOverScreen" class="overlay">
       <div class="overlay-content">
         <h2>Game Over</h2>
         <p id="finalScore"></p>
 
-        <!-- Вопрос о сохранении результата -->
         <p>Do you want to save your result?</p>
         <input type="text" id="playerName" placeholder="Enter your name" />
         <button id="saveButton">Save Result</button>
 
         <button id="restartButton">Restart Game</button>
+
+        <button id="menuButton">Menu</button>
       </div>
-    </div>
+    </div> -->
 
     <!-- Модалка для таблицы лидеров -->
-    <div id="leaderboardModal" class="modal">
+    <!-- <div id="leaderboardModal" class="modal">
       <div class="modal-content">
         <h2>Leaderboard</h2>
         <table id="leaderboardTable">
@@ -48,14 +49,13 @@
             </tr>
           </thead>
           <tbody id="leaderboardBody">
-            <!-- Здесь будут отображаться данные -->
           </tbody>
         </table>
         <button id="closeLeaderboardButton">Close</button>
-        <!-- Кнопка для закрытия модалки -->
       </div>
-    </div>
+    </div> -->
 
     <script type="module" src="index.js"></script>
+    <link href="https://unpkg.com/nes.css/css/nes.min.css" rel="stylesheet" />
   </body>
 </html>

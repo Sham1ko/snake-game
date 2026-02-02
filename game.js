@@ -1,16 +1,26 @@
 import { updateScore, showGameOverScreen, resetUI } from './ui.js';
-import { saveFinalScore } from './index.js';
+// import { saveFinalScore } from './index.js';
 
-let canvas = document.getElementById("gameCanvas");
-let ctx = canvas.getContext("2d");
-
+let canvas;
+let ctx;
 let Snake = [];
-let Food = {};
 let speedX = 10;
 let speedY = 0;
+let Food = {};
 let interval = 100;
 let move;
 let score = 0;
+
+function initCanvas() {
+    // Находим canvas и его контекст
+    canvas = document.getElementById("gameCanvas");
+    if (!canvas) {
+        console.error("Canvas not found!");
+        return false;
+    }
+    ctx = canvas.getContext("2d");
+    return true;
+}
 
 function initSnake() {
     Snake = [{ x: 50, y: 50 }];
@@ -24,19 +34,21 @@ function isFoodOnSnake(newFood) {
 
 function createNewFood() {
     let newFood;
-    do {
-        newFood = {
-            x: Math.floor(Math.random() * (canvas.width / 10)) * 10,
-            y: Math.floor(Math.random() * (canvas.height / 10)) * 10,
-        };
-    } while (isFoodOnSnake(newFood));
+    if (canvas) {
+        do {
+            newFood = {
+                x: Math.floor(Math.random() * (canvas.width / 10)) * 10,
+                y: Math.floor(Math.random() * (canvas.height / 10)) * 10,
+            };
+        } while (isFoodOnSnake(newFood));
+    }
     Food = newFood;
 }
 
 function endGame() {
     clearInterval(move);
     showGameOverScreen(score);
-    saveFinalScore(score);
+    // saveFinalScore(score);
 }
 
 function checkSelfCollision() {
@@ -49,50 +61,57 @@ function checkSelfCollision() {
 }
 
 function movingSnake() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let i = Snake.length - 1; i > 0; i--) {
-        Snake[i] = { ...Snake[i - 1] };
+        for (let i = Snake.length - 1; i > 0; i--) {
+            Snake[i] = { ...Snake[i - 1] };
+        }
+        Snake[0].x += speedX;
+        Snake[0].y += speedY;
+
+        if (Snake[0].x < 0 || Snake[0].x >= canvas.width || Snake[0].y < 0 || Snake[0].y >= canvas.height) {
+            endGame();
+            return;
+        }
+
+        if (checkSelfCollision()) {
+            endGame();
+            return;
+        }
+
+        if (Snake[0].x === Food.x && Snake[0].y === Food.y) {
+            Snake.push({ ...Snake[Snake.length - 1] });
+            createNewFood();
+            score++;
+            updateScore(score);
+        }
+
+        ctx.fillStyle = 'red';
+        ctx.fillRect(Food.x, Food.y, 10, 10);
+
+        ctx.fillStyle = 'lime';
+        Snake.forEach(segment => {
+            ctx.fillRect(segment.x, segment.y, 10, 10);
+        });
+
     }
-    Snake[0].x += speedX;
-    Snake[0].y += speedY;
-
-    if (Snake[0].x < 0 || Snake[0].x >= canvas.width || Snake[0].y < 0 || Snake[0].y >= canvas.height) {
-        endGame();
-        return;
-    }
-
-    if (checkSelfCollision()) {
-        endGame();
-        return;
-    }
-
-    if (Snake[0].x === Food.x && Snake[0].y === Food.y) {
-        Snake.push({ ...Snake[Snake.length - 1] });
-        createNewFood();
-        score++;
-        updateScore(score);
-    }
-
-    ctx.fillStyle = 'red';
-    ctx.fillRect(Food.x, Food.y, 10, 10);
-
-    ctx.fillStyle = 'lime';
-    Snake.forEach(segment => {
-        ctx.fillRect(segment.x, segment.y, 10, 10);
-    });
 }
 
-
 export function startGame() {
-    resetUI();
-    initSnake();
-    createNewFood();
-    score = 0;
-    updateScore(score);
+    // Инициализация canvas
+    if (!initCanvas()) return;
 
+    // resetUI(); // Сброс интерфейса
+    initSnake(); // Создание змейки
+    createNewFood(); // Создание еды
+    score = 0; // Сброс очков
+    updateScore(score); // Отображение начального счёта
+
+    // Запуск игры
     move = setInterval(movingSnake, interval);
 
+    // Обработка нажатий клавиш
     document.addEventListener('keydown', function (event) {
         if (event.key === "ArrowRight" && speedX === 0) {
             speedX = 10;
