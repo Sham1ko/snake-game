@@ -3,41 +3,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Snake Game</title>
+    <meta name="theme-color" content="#070b08" />
+    <title>Snake · Arcade Classic</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Crect%20width='16'%20height='16'%20fill='%23070b08'/%3E%3Crect%20x='2'%20y='2'%20width='9'%20height='9'%20rx='2'%20fill='%2357ff7f'/%3E%3Crect%20x='9'%20y='9'%20width='5'%20height='5'%20rx='1.5'%20fill='%23ffc857'/%3E%3C/svg%3E" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <h1 style="color: white">Snake Game</h1>
-    <div id="menu">
-      <button id="startButton">Start Game</button>
-      <button id="leaderboardButton">Show Leaderboard</button>
-      <!-- Кнопка для показа таблицы лидеров -->
-    </div>
+  <body class="state-menu">
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
 
-    <!-- Счетчик очков -->
-    <div id="score">Score: 0</div>
+    <main class="stage">
+      <header class="masthead">
+        <p class="eyebrow">Retro arcade</p>
+        <h1 class="logo">Snake</h1>
+        <p class="tagline">Eat the food. Grow long. Avoid the walls.</p>
+      </header>
 
-    <canvas id="gameCanvas" width="300" height="300"></canvas>
+      <section id="menu" class="menu" aria-label="Main menu">
+        <button id="startButton" class="btn btn-primary">Start Game</button>
+        <button id="leaderboardButton" class="btn btn-ghost">Leaderboard</button>
+      </section>
 
-    <!-- Всплывающее окно при окончании игры -->
-    <div id="gameOverScreen" class="overlay">
-      <div class="overlay-content">
-        <h2>Game Over</h2>
-        <p id="finalScore"></p>
+      <section id="gameArea" class="game-area" aria-label="Game">
+        <div class="hud">
+          <div class="hud-chip">Arrows / WASD</div>
+          <div id="score" class="hud-chip score-chip">
+            <span class="score-label">Score</span>
+            <span id="scoreValue" class="score-value">0</span>
+          </div>
+        </div>
+        <div id="screenFrame" class="screen">
+          <canvas id="gameCanvas" width="300" height="300"></canvas>
+        </div>
+      </section>
+    </main>
 
-        <!-- Вопрос о сохранении результата -->
-        <p>Do you want to save your result?</p>
-        <input type="text" id="playerName" placeholder="Enter your name" />
-        <button id="saveButton">Save Result</button>
+    <!-- Окно окончания игры -->
+    <div id="gameOverScreen" class="overlay" role="dialog" aria-modal="true" aria-labelledby="gameOverTitle">
+      <div class="panel">
+        <p class="overlay-eyebrow">Run finished</p>
+        <h2 id="gameOverTitle">Game Over</h2>
+        <p id="finalScore" class="final-score"></p>
 
-        <button id="restartButton">Restart Game</button>
+        <!-- Сохранение результата -->
+        <div class="save-block">
+          <p class="save-label">Save this result?</p>
+          <div class="save-row">
+            <input type="text" id="playerName" placeholder="Your name" maxlength="24" autocomplete="off" />
+            <button id="saveButton" class="btn btn-amber">Save</button>
+          </div>
+          <p id="saveStatus" class="save-status" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="overlay-actions">
+          <button id="restartButton" class="btn btn-primary">Restart</button>
+          <button id="menuButton" class="btn btn-ghost">Menu</button>
+        </div>
       </div>
     </div>
 
-    <!-- Модалка для таблицы лидеров -->
-    <div id="leaderboardModal" class="modal">
-      <div class="modal-content">
-        <h2>Leaderboard</h2>
+    <!-- Модальное окно таблицы лидеров -->
+    <div id="leaderboardModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="leaderboardTitle">
+      <div class="panel">
+        <div class="modal-head">
+          <h2 id="leaderboardTitle">Leaderboard</h2>
+          <button id="closeLeaderboardButton" class="icon-btn" aria-label="Close leaderboard">×</button>
+        </div>
         <table id="leaderboardTable">
           <thead>
             <tr>
@@ -48,11 +82,9 @@
             </tr>
           </thead>
           <tbody id="leaderboardBody">
-            <!-- Здесь будут отображаться данные -->
+            <!-- Строки добавляет ui.js -->
           </tbody>
         </table>
-        <button id="closeLeaderboardButton">Close</button>
-        <!-- Кнопка для закрытия модалки -->
       </div>
     </div>
 
