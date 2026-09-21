@@ -23,20 +23,46 @@
       </header>
 
       <section id="menu" class="menu" aria-label="Main menu">
+        <div id="controlPicker" class="picker" aria-label="Control scheme">
+          <span class="picker-label">Controls</span>
+          <div class="picker-options" role="group">
+            <button type="button" class="picker-opt" data-mode="swipe">Swipe</button>
+            <button type="button" class="picker-opt" data-mode="buttons">Buttons</button>
+          </div>
+        </div>
         <button id="startButton" class="btn btn-primary">Start Game</button>
         <button id="leaderboardButton" class="btn btn-ghost">Leaderboard</button>
       </section>
 
       <section id="gameArea" class="game-area" aria-label="Game">
-        <div class="hud">
-          <div class="hud-chip">Arrows / WASD</div>
-          <div id="score" class="hud-chip score-chip">
-            <span class="score-label">Score</span>
-            <span id="scoreValue" class="score-value">0</span>
+        <div id="hud" class="hud">
+          <div id="hintChip" class="hud-chip">Arrows / WASD</div>
+          <div class="hud-right">
+            <div id="score" class="hud-chip score-chip">
+              <span class="score-label">Score</span>
+              <span id="scoreValue" class="score-value">0</span>
+            </div>
+            <button id="pauseButton" class="hud-btn" type="button" aria-label="Pause game">
+              <svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true"><rect x="3" y="2" width="3.6" height="12" rx="1"/><rect x="9.4" y="2" width="3.6" height="12" rx="1"/></svg>
+            </button>
           </div>
         </div>
         <div id="screenFrame" class="screen">
           <canvas id="gameCanvas" width="300" height="300"></canvas>
+        </div>
+        <div id="pad" class="pad" aria-label="Direction buttons">
+          <button id="padUp" class="pad-btn" type="button" aria-label="Turn up">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 15 12 9 18 15"/></svg>
+          </button>
+          <button id="padLeft" class="pad-btn" type="button" aria-label="Turn left">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 6 9 12 15 18"/></svg>
+          </button>
+          <button id="padDown" class="pad-btn" type="button" aria-label="Turn down">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <button id="padRight" class="pad-btn" type="button" aria-label="Turn right">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 6 15 12 9 18"/></svg>
+          </button>
         </div>
       </section>
     </main>
@@ -75,6 +101,19 @@
         <div class="overlay-actions">
           <button id="restartButton" class="btn btn-primary">Restart</button>
           <button id="menuButton" class="btn btn-ghost">Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Пауза -->
+    <div id="pauseScreen" class="overlay" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+      <div class="panel">
+        <p class="overlay-eyebrow">Take a breath</p>
+        <h2 id="pauseTitle">Paused</h2>
+        <p id="pauseScore" class="final-score"></p>
+        <div class="overlay-actions">
+          <button id="resumeButton" class="btn btn-primary">Resume</button>
+          <button id="pauseMenuButton" class="btn btn-ghost">Menu</button>
         </div>
       </div>
     </div>

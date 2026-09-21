@@ -1,9 +1,13 @@
-import { startGame } from './game.js';
+import {
+    startGame, togglePause, resumeGame, stopGame,
+    getControlMode, setControlMode, hasTouch, isRunning,
+} from './game.js';
 import {
     hideMenu, showMenu, resetUI,
     showLeaderboardModal, closeLeaderboardModal,
     setSaveStatus, setSaveBusy,
     leaderboardLoading, leaderboardEmpty, leaderboardError, leaderboardRows,
+    applyControlMode, setPickerVisible, markActiveControl,
 } from './ui.js';
 
 const API_URL = 'https://snake-game-worker.shamshyrak-zholdasbek.workers.dev';
@@ -13,6 +17,18 @@ let finalScore = 0;
 export function saveFinalScore(score) {
     finalScore = score;
 }
+
+// Выбор управления: на сенсорных экранах свайпы или D-pad, выбор запоминается
+setPickerVisible(hasTouch());
+markActiveControl(getControlMode());
+applyControlMode(getControlMode());
+
+document.querySelectorAll('#controlPicker .picker-opt').forEach((opt) => {
+    opt.addEventListener('click', () => {
+        setControlMode(opt.dataset.mode);
+        markActiveControl(getControlMode());
+    });
+});
 
 // Запуск игры из меню
 document.getElementById('startButton').addEventListener('click', () => {
@@ -25,6 +41,18 @@ document.getElementById('restartButton').addEventListener('click', startGame);
 
 // Возврат в меню с экрана Game Over
 document.getElementById('menuButton').addEventListener('click', () => {
+    stopGame();
+    showMenu();
+    resetUI();
+});
+
+// Пауза: кнопка в HUD, Resume и Menu на экране паузы
+document.getElementById('pauseButton').addEventListener('click', togglePause);
+
+document.getElementById('resumeButton').addEventListener('click', resumeGame);
+
+document.getElementById('pauseMenuButton').addEventListener('click', () => {
+    stopGame();
     showMenu();
     resetUI();
 });
@@ -118,17 +146,23 @@ window.addEventListener('click', (event) => {
     }
 });
 
-// Escape закрывает модалку, а с экрана Game Over возвращает в меню
+// Escape: закрывает модалку, возвращает в меню, ставит и снимает паузу
 document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape') return;
 
     const leaderboardModal = document.getElementById('leaderboardModal');
     const gameOverScreen = document.getElementById('gameOverScreen');
+    const pauseScreen = document.getElementById('pauseScreen');
 
     if (leaderboardModal.classList.contains('is-open')) {
         closeLeaderboard();
     } else if (gameOverScreen.classList.contains('is-open')) {
+        stopGame();
         showMenu();
         resetUI();
+    } else if (pauseScreen.classList.contains('is-open')) {
+        resumeGame();
+    } else if (isRunning()) {
+        togglePause();
     }
 });

@@ -26,6 +26,7 @@ html {
 
 body {
   min-height: 100vh;
+  min-height: 100dvh;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -36,6 +37,7 @@ body {
   font-size: 20px;
   line-height: 1.45;
   color: var(--text);
+  -webkit-tap-highlight-color: transparent;
   background:
     radial-gradient(640px 420px at 50% -8%, rgba(87, 255, 127, 0.08), transparent 70%),
     radial-gradient(720px 540px at 50% 118%, rgba(255, 200, 87, 0.05), transparent 70%),
@@ -248,6 +250,7 @@ body {
   padding: 12px;
   background: var(--panel-deep);
   border-radius: 10px;
+  touch-action: none; /* свайпы по полю не прокручивают страницу */
   box-shadow:
     inset 0 0 0 2px var(--line),
     inset 0 0 26px rgba(0, 0, 0, 0.6),
@@ -574,8 +577,13 @@ body.state-playing .tagline {
   animation: rise 0.5s ease both;
 }
 
-.menu .btn:nth-child(1) { animation-delay: 0.26s; }
-.menu .btn:nth-child(2) { animation-delay: 0.33s; }
+.menu .picker {
+  animation: rise 0.5s ease both;
+  animation-delay: 0.19s;
+}
+
+.menu .btn:nth-child(2) { animation-delay: 0.26s; }
+.menu .btn:nth-child(3) { animation-delay: 0.33s; }
 
 body.state-playing .game-area {
   animation: rise 0.4s ease both;
@@ -675,3 +683,163 @@ body.state-playing .game-area {
 .credits-dot {
   color: var(--muted);
 }
+
+/* Выбор управления (показывается только на сенсорных экранах) */
+.picker {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--line);
+  border-radius: 4px;
+}
+
+.picker.is-visible {
+  display: flex;
+}
+
+.picker-label {
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.picker-options {
+  display: flex;
+  box-shadow: inset 0 0 0 1px var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.picker-opt {
+  padding: 5px 14px;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 18px;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+  touch-action: manipulation;
+}
+
+.picker-opt + .picker-opt {
+  border-left: 1px solid var(--line);
+}
+
+.picker-opt:hover {
+  color: var(--green);
+}
+
+.picker-opt.is-active {
+  background: var(--green);
+  color: #05200d;
+}
+
+.picker-opt:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: -2px;
+}
+
+/* Правая часть HUD: счёт и пауза */
+.hud-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud.no-hint {
+  justify-content: flex-end;
+}
+
+.hud-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 11px;
+  background: var(--panel);
+  border: 0;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 0.15s ease, box-shadow 0.15s ease;
+  touch-action: manipulation;
+}
+
+.hud-btn:hover {
+  color: var(--green);
+  box-shadow: inset 0 0 0 1px var(--green-deep);
+}
+
+.hud-btn:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.hud-btn svg {
+  display: block;
+}
+
+/* Заголовок паузы зелёный, у Game Over красный */
+#pauseTitle {
+  color: var(--green);
+  text-shadow: 0 0 16px rgba(87, 255, 127, 0.4);
+}
+
+/* D-pad под полем */
+.pad {
+  display: none;
+  margin-top: 2px;
+}
+
+.pad.is-visible {
+  display: grid;
+  grid-template-columns: repeat(3, 64px);
+  grid-template-rows: repeat(2, 56px);
+  gap: 8px;
+  justify-content: center;
+}
+
+.pad-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--panel);
+  border: 0;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 2px var(--line);
+  color: var(--text);
+  cursor: pointer;
+  transition: transform 0.06s ease, background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  touch-action: manipulation;
+}
+
+.pad-btn:hover {
+  color: var(--green);
+  box-shadow: inset 0 0 0 2px var(--green-deep);
+}
+
+.pad-btn:active {
+  background: rgba(87, 255, 127, 0.12);
+  color: var(--green);
+  transform: scale(0.94);
+}
+
+.pad-btn:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.pad-btn svg {
+  display: block;
+  pointer-events: none;
+}
+
+#padUp { grid-area: 1 / 2; }
+#padLeft { grid-area: 2 / 1; }
+#padDown { grid-area: 2 / 2; }
+#padRight { grid-area: 2 / 3; }

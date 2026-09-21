@@ -1,4 +1,4 @@
-import { updateScore, showGameOverScreen, resetUI } from './ui.js';
+import { updateScore, showGameOverScreen, resetUI, applyControlMode, showPauseScreen, hidePauseScreen } from './ui.js';
 import { saveFinalScore } from './index.js';
 
 const CELL = 10;
@@ -20,6 +20,7 @@ let interval = 100;
 let move = null;
 let score = 0;
 let running = false;
+let paused = false;
 
 const screenFrame = document.getElementById('screenFrame');
 
@@ -178,12 +179,8 @@ const KEY_DIRS = {
     ArrowRight: 'right', KeyD: 'right',
 };
 
-function handleKey(event) {
-    if (!running) return;
-    const dir = KEY_DIRS[event.code];
-    if (!dir) return;
-    event.preventDefault(); // стрелки не прокручивают страницу
-
+// Поворот: разворот на 180 градусов запрещён правилами
+function turn(dir) {
     if ((dir === 'left' || dir === 'right') && speedX === 0) {
         speedX = dir === 'left' ? -CELL : CELL;
         speedY = 0;
@@ -191,6 +188,14 @@ function handleKey(event) {
         speedY = dir === 'up' ? -CELL : CELL;
         speedX = 0;
     }
+}
+
+function handleKey(event) {
+    if (!isGameActive()) return;
+    const dir = KEY_DIRS[event.code];
+    if (!dir) return;
+    event.preventDefault(); // стрелки не прокручивают страницу
+    turn(dir);
 }
 
 document.addEventListener('keydown', handleKey);
@@ -207,7 +212,135 @@ export function startGame() {
     createNewFood();
     score = 0;
     updateScore(0);
+    paused = false;
     running = true;
 
     move = setInterval(movingSnake, interval);
+}
+
+// ---- Пауза ----
+export function isRunning() {
+    return running;
+}
+
+function isGameActive() {
+    return running && !paused;
+}
+
+export function togglePause() {
+    if (paused) {
+        resumeGame();
+    } else {
+        pauseGame();
+    }
+}
+
+export function pauseGame() {
+    if (!running || paused) return;
+    paused = true;
+    clearInterval(move);
+    move = null;
+    showPauseScreen(score);
+}
+
+export function resumeGame() {
+    if (!paused) return;
+    paused = false;
+    hidePauseScreen();
+    move = setInterval(movingSnake, interval);
+}
+
+// Полная остановка: возврат в меню с паузы или Game Over
+export function stopGame() {
+    running = false;
+    paused = false;
+    clearInterval(move);
+    move = null;
+    hidePauseScreen();
+}
+
+// Автопауза, когда вкладка уходит на фон
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        pauseGame();
+    }
+});
+
+// ---- Свайпы по полю ----
+const SWIPE_MIN = 24; // порог в CSS-пикселях
+let touchOrigin = null;
+
+screenFrame.addEventListener('touchstart', (event) => {
+    const t = event.touches[0];
+    touchOrigin = { x: t.clientX, y: t.clientY };
+}, { passive: true });
+
+screenFrame.addEventListener('touchmove', (event) => {
+    if (!touchOrigin || !isGameActive()) return;
+    const t = event.touches[0];
+    const dx = t.clientX - touchOrigin.x;
+    const dy = t.clientY - touchOrigin.y;
+    if (Math.abs(dx) < SWIPE_MIN && Math.abs(dy) < SWIPE_MIN) return;
+
+    event.preventDefault(); // жест по полю не прокручивает страницу
+    touchOrigin = { x: t.clientX, y: t.clientY }; // можно вести палец не отрывая
+    if (Math.abs(dx) > Math.abs(dy)) {
+        turn(dx > 0 ? 'right' : 'left');
+    } else {
+        turn(dy > 0 ? 'down' : 'up');
+    }
+}, { passive: false });
+
+screenFrame.addEventListener('touchend', () => {
+    touchOrigin = null;
+});
+
+screenFrame.addEventListener('touchcancel', () => {
+    touchOrigin = null;
+});
+
+// ---- D-pad под полем ----
+const PAD_DIRS = {
+    padUp: 'up',
+    padDown: 'down',
+    padLeft: 'left',
+    padRight: 'right',
+};
+
+Object.keys(PAD_DIRS).forEach((id) => {
+    document.getElementById(id).addEventListener('click', () => {
+        if (isGameActive()) {
+            turn(PAD_DIRS[id]);
+        }
+    });
+});
+
+// ---- Выбор управления ----
+const CONTROL_KEY = 'snake-control';
+
+export function hasTouch() {
+    return window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+}
+
+export function getControlMode() {
+    let saved = null;
+    try {
+        saved = localStorage.getItem(CONTROL_KEY);
+    } catch (error) {
+        // приватный режим: настройка просто не сохраняется
+    }
+    if (saved === 'swipe' || saved === 'buttons') {
+        return saved;
+    }
+    return hasTouch() ? 'swipe' : 'keys';
+}
+
+export function setControlMode(mode) {
+    if (mode !== 'swipe' && mode !== 'buttons') return;
+    try {
+        localStorage.setItem(CONTROL_KEY, mode);
+    } catch (error) {
+        // приватный режим: настройка просто не сохраняется
+    }
+    applyControlMode(mode);
 }

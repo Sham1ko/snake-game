@@ -1,5 +1,9 @@
 const body = document.body;
 const menu = document.getElementById('menu');
+const hud = document.getElementById('hud');
+const hintChip = document.getElementById('hintChip');
+const pad = document.getElementById('pad');
+const controlPicker = document.getElementById('controlPicker');
 const scoreChip = document.getElementById('score');
 const scoreValue = document.getElementById('scoreValue');
 const gameOverScreen = document.getElementById('gameOverScreen');
@@ -7,6 +11,9 @@ const finalScoreDisplay = document.getElementById('finalScore');
 const saveStatus = document.getElementById('saveStatus');
 const saveButton = document.getElementById('saveButton');
 const restartButton = document.getElementById('restartButton');
+const pauseScreen = document.getElementById('pauseScreen');
+const pauseScore = document.getElementById('pauseScore');
+const resumeButton = document.getElementById('resumeButton');
 const leaderboardModal = document.getElementById('leaderboardModal');
 const leaderboardBody = document.getElementById('leaderboardBody');
 const closeLeaderboardButton = document.getElementById('closeLeaderboardButton');
@@ -42,7 +49,49 @@ export function showGameOverScreen(score) {
 // Сброс интерфейса перед новой партией
 export function resetUI() {
     gameOverScreen.classList.remove('is-open');
+    pauseScreen.classList.remove('is-open');
     updateScore(0);
+}
+
+// Применение выбранного управления: подсказка и D-pad
+export function applyControlMode(mode) {
+    if (mode === 'buttons') {
+        hintChip.style.display = 'none';
+        pad.classList.add('is-visible');
+        hud.classList.add('no-hint');
+        return;
+    }
+
+    if (mode === 'swipe') {
+        hintChip.textContent = 'Swipe to steer';
+    } else {
+        hintChip.textContent = 'Arrows / WASD';
+    }
+    hintChip.style.display = '';
+    pad.classList.remove('is-visible');
+    hud.classList.remove('no-hint');
+}
+
+// Переключатель управления виден только на сенсорных экранах
+export function setPickerVisible(visible) {
+    controlPicker.classList.toggle('is-visible', visible);
+}
+
+export function markActiveControl(mode) {
+    controlPicker.querySelectorAll('.picker-opt').forEach((opt) => {
+        opt.classList.toggle('is-active', opt.dataset.mode === mode);
+    });
+}
+
+// Экран паузы
+export function showPauseScreen(score) {
+    pauseScore.textContent = `Your score: ${score}`;
+    pauseScreen.classList.add('is-open');
+    resumeButton.focus();
+}
+
+export function hidePauseScreen() {
+    pauseScreen.classList.remove('is-open');
 }
 
 // Статус сохранения результата (вместо alert)
