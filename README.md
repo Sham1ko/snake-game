@@ -1,23 +1,61 @@
-# snake-game
+<div align="center">
+  <img src="logo.svg" alt="Snake" width="300" />
+  <p>Classic snake for the browser, written in vanilla JavaScript.</p>
+</div>
 
-Classic snake in vanilla JavaScript: canvas rendering, keyboard controls, and a leaderboard stored on a Cloudflare Worker.
+## Screenshots
 
-## Run
+<table>
+  <tr>
+    <td align="center"><img src="screenshots/menu.png" alt="Menu screen" width="100%" /><br /><sub>Menu</sub></td>
+    <td align="center"><img src="screenshots/gameplay.png" alt="Gameplay" width="100%" /><br /><sub>Gameplay</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="screenshots/game-over.png" alt="Game over screen" width="100%" /><br /><sub>Game over</sub></td>
+    <td align="center"><img src="screenshots/leaderboard.png" alt="Leaderboard" width="100%" /><br /><sub>Leaderboard</sub></td>
+  </tr>
+</table>
 
-The game uses ES modules, so it needs a local server:
+## Tech stack
 
-```
+- Canvas 2D draws the board at 600x600 device pixels and displays it at 300 CSS pixels, so shapes stay sharp on high-density screens.
+- Vanilla JavaScript with ES modules. The game has no dependencies and no build step.
+- CSS custom properties hold the color palette. Scanlines, the vignette, and pixel-style buttons are plain CSS overlays.
+- A Cloudflare Worker stores the leaderboard. The client talks to it with fetch.
+
+## Project files
+
+| File | What it does |
+| ---- | ------------ |
+| `game.js` | game loop, collisions, canvas rendering |
+| `ui.js` | DOM updates, screen switching, leaderboard states |
+| `index.js` | event wiring, save and fetch calls |
+| `index.html` | page skeleton, overlays, font links |
+| `style.css` | the whole theme |
+
+## Run the game
+
+ES modules need HTTP, so serve the folder instead of opening the file directly.
+
+```sh
 npx serve .
 ```
 
 or
 
-```
+```sh
 python -m http.server 8000
 ```
 
-Open http://localhost:3000 (serve) or http://localhost:8000 (python).
+Then open http://localhost:3000 or http://localhost:8000.
 
 ## Controls
 
-Arrow keys or WASD to steer. Escape closes dialogs. The leaderboard reads and writes to `https://snake-game-worker.shamshyrak-zholdasbek.workers.dev`.
+Steer with the arrow keys or WASD. The keys work on any keyboard layout. Escape closes the leaderboard. On the game over screen, Escape returns to the menu.
+
+## Leaderboard API
+
+The client reads and writes scores at `https://snake-game-worker.shamshyrak-zholdasbek.workers.dev`.
+
+- `GET` returns the saved scores as a JSON array. The client renders the first 10 entries.
+- `POST` saves one result. The body is JSON: `{ "name": "Ada", "score": 12 }`.

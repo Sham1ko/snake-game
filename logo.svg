@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 180" width="340" height="180" role="img" aria-label="Snake">
+  <defs>
+    <!-- Слово SNAKE пиксельными блоками 10x10 -->
+    <path id="word" d="
+      M0 0h50v10h-50z M0 10h10v10h-10z M0 20h10v10h-10z M0 30h50v10h-50z M40 40h10v10h-10z M40 50h10v10h-10z M0 60h50v10h-50z
+      M60 0h10v10h-10z M100 0h10v10h-10z M60 10h20v10h-20z M100 10h10v10h-10z M60 20h20v10h-20z M100 20h10v10h-10z M60 30h10v10h-10z M80 30h10v10h-10z M100 30h10v10h-10z M60 40h10v10h-10z M90 40h20v10h-20z M60 50h10v10h-10z M90 50h20v10h-20z M60 60h10v10h-10z M100 60h10v10h-10z
+      M130 0h30v10h-30z M120 10h10v10h-10z M160 10h10v10h-10z M120 20h10v10h-10z M160 20h10v10h-10z M120 30h50v10h-50z M120 40h10v10h-10z M160 40h10v10h-10z M120 50h10v10h-10z M160 50h10v10h-10z M120 60h10v10h-10z M160 60h10v10h-10z
+      M180 0h10v10h-10z M220 0h10v10h-10z M180 10h10v10h-10z M210 10h10v10h-10z M180 20h10v10h-10z M200 20h10v10h-10z M180 30h20v10h-20z M180 40h10v10h-10z M200 40h10v10h-10z M180 50h10v10h-10z M210 50h10v10h-10z M180 60h10v10h-10z M220 60h10v10h-10z
+      M240 0h50v10h-50z M240 10h10v10h-10z M240 20h10v10h-10z M240 30h40v10h-40z M240 40h10v10h-10z M240 50h10v10h-10z M240 60h50v10h-50z"/>
+  </defs>
+
+  <!-- Карточка -->
+  <rect x="3" y="3" width="334" height="174" rx="20" fill="#070b08" stroke="#24361f" stroke-width="2"/>
+
+  <!-- Угловые метки -->
+  <path d="M20 38 L20 20 L38 20" fill="none" stroke="#ffc857" stroke-width="3"/>
+  <path d="M320 142 L320 160 L302 160" fill="none" stroke="#ffc857" stroke-width="3"/>
+
+  <!-- Слово: тень, затем основной слой -->
+  <use href="#word" x="25" y="38" fill="#1d7a37"/>
+  <use href="#word" x="25" y="32" fill="#57ff7f"/>
+
+  <!-- Змейка ползёт к еде -->
+  <rect x="126" y="124" width="14" height="14" rx="3.5" fill="#1f8a40"/>
+  <rect x="142" y="124" width="14" height="14" rx="3.5" fill="#2fae52"/>
+  <rect x="158" y="124" width="14" height="14" rx="3.5" fill="#46d066"/>
+  <rect x="174" y="124" width="14" height="14" rx="3.5" fill="#8cffa8"/>
+  <rect x="181" y="127" width="3" height="3" fill="#06240f"/>
+  <rect x="181" y="133" width="3" height="3" fill="#06240f"/>
+  <rect x="196" y="120" width="16" height="16" rx="5" fill="#ff5b4d" opacity="0.25"/>
+  <rect x="199" y="123" width="10" height="10" rx="2.5" fill="#ff5b4d"/>
+</svg>
